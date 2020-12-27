@@ -2,8 +2,6 @@ package de.mnreinisch.pp.watcher.gui;
 
 import de.mnreinisch.pp.watcher.Main;
 import de.mnreinisch.pp.watcher.control.GlobalHelper;
-import de.mnreinisch.pp.watcher.control.Settings;
-import de.mnreinisch.pp.watcher.domain.Setting;
 import de.mnreinisch.pp.watcher.domain.exceptions.TechnicalException;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -12,12 +10,11 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 
 public class GUIStarter {
-    public static final String DARK_THEME_SHEET = GUIStarter.class.getResource("./css/dark.css").toExternalForm();
-
     public static void generateStartView() throws TechnicalException {
         try{
             GlobalHelper gh = GlobalHelper.getInstance();
@@ -29,31 +26,26 @@ public class GUIStarter {
             Stage dashboard = createNewGUI(load, "Dashboard");
             dashboard.setOnCloseRequest(Start::exitApplication);
 
-            Setting setting = Settings.getInstance().getSetting();
-            if(setting.getTheme() == Settings.DARK_THEME){
-                dashboard.getScene().getStylesheets().add(DARK_THEME_SHEET);
-            }
+            dashboard.getScene().getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, Start::exitApplication);
 
             gh.setStartStage(dashboard);
+            Start.reloadTable();
 
         } catch (IOException e) {
-            throw new TechnicalException("Couldn't load Startview.\n" +e.getMessage());
+            throw new TechnicalException("Couldn't load start-view.\n" +e.getMessage());
         }
     }
 
-    public static void reloadTheme(){
-        GlobalHelper globalHelper = GlobalHelper.getInstance();
-        Setting setting = Settings.getInstance().getSetting();
-        changeTheme(globalHelper.getStartStage(), setting.getTheme());
-    }
-
-    private static void changeTheme(Stage stage, int theme){
-        if(stage == null) return;
-        Scene scene = stage.getScene();
-        if(theme == Settings.LIGHT_THEME){
-            scene.getStylesheets().clear();
-        } else {
-            scene.getStylesheets().add(DARK_THEME_SHEET);
+    public static void createAddView() throws TechnicalException {
+        try{
+            GlobalHelper gh = GlobalHelper.getInstance();
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(GUIStarter.class.getResource("./add.fxml"));
+            Parent load = fxmlLoader.load();
+            Stage add = createNewGUI(load, "Add transaction");
+            gh.setAddStage(add);
+        } catch (IOException e) {
+            throw new TechnicalException("Couldn't load add-view.\n" +e.getMessage());
         }
     }
 

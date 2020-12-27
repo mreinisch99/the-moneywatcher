@@ -17,6 +17,9 @@ public class Date implements Cloneable, Serializable, Comparable<Date> {
     @Temporal(TemporalType.DATE)
     private java.util.Date date;
 
+    public Date() {
+    }
+
     public Date(LocalDate date){
         if(date == null) throw new NullPointerException("Please provide a date");
         this.date = date.toDateTimeAtStartOfDay().toDate();
@@ -30,6 +33,19 @@ public class Date implements Cloneable, Serializable, Comparable<Date> {
         } catch (ParseException e) {
             throw new IllegalArgumentException(MessageFormat.format("{0} isn't a valid date!", date));
         }
+    }
+
+    public void setDateFromString(String date){
+        try{
+            SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_PATTERN);
+            this.date = sdf.parse(date);
+        } catch (ParseException e) {
+            throw new IllegalArgumentException(MessageFormat.format("{0} isn't a valid date!", date));
+        }
+    }
+
+    public void setDateFromLD(LocalDate localDate){
+        this.date = localDate.toDate();
     }
 
     @Override
@@ -52,5 +68,24 @@ public class Date implements Cloneable, Serializable, Comparable<Date> {
     public static String convertDateToString(java.util.Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_PATTERN);
         return sdf.format(date);
+    }
+
+    public static LocalDate convertStringToLD(String date){
+        try{
+            SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_PATTERN);
+            return new LocalDate(sdf.parse(date));
+        } catch (ParseException e) {
+            throw new IllegalArgumentException(MessageFormat.format("{0} isn't a valid date!", date));
+        }
+    }
+
+    public static boolean isValidDate(String date){
+        try{
+            SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_PATTERN);
+            sdf.parse(date);
+        } catch (ParseException e) {
+            return false;
+        }
+        return true;
     }
 }

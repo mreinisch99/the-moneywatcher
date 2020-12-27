@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      prefHeight="280.0" prefWidth="454.0" stylesheets="@css/darkMode.css" styleClass="background"
+      xmlns="http://javafx.com/javafx/8.0.171"
+      fx:controller="de.mnreinisch.pp.watcher.gui.Add"
+      xmlns:fx="http://javafx.com/fxml/1">
+    <Label alignment="CENTER" contentDisplay="CENTER" text="Add new transaction" textAlignment="CENTER">
+        <font>
+            <Font name="Bastion Regular" size="25.0"/>
+        </font>
+        <VBox.margin>
+            <Insets bottom="5.0" top="10.0"/>
+        </VBox.margin>
+    </Label>
+    <HBox prefHeight="43.0" prefWidth="600.0" spacing="5.0">
+        <VBox.margin>
+            <Insets/>
+        </VBox.margin>
+        <padding>
+            <Insets left="10.0" right="10.0" top="10.0"/>
+        </padding>
+        <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+            <Label text="Amount:"/>
+            <TextField fx:id="tfAmount" prefHeight="25.0" prefWidth="101.0"/>
+        </VBox>
+    </HBox>
+    <HBox prefHeight="43.0" prefWidth="600.0" spacing="5.0">
+        <padding>
+            <Insets left="10.0" right="10.0" top="10.0"/>
+        </padding>
+        <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+            <Label text="Information:"/>
+            <TextField fx:id="tfInfo" prefHeight="25.0" prefWidth="346.0"/>
+        </VBox>
+    </HBox>
+    <HBox prefHeight="43.0" prefWidth="600.0" spacing="5.0">
+        <padding>
+            <Insets left="10.0" right="10.0" top="10.0"/>
+        </padding>
+        <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+            <Label text="Day:"/>
+            <TextField fx:id="tfDay" prefHeight="25.0" prefWidth="346.0"/>
+        </VBox>
+    </HBox>
+    <HBox prefHeight="43.0" prefWidth="600.0" spacing="5.0">
+        <padding>
+            <Insets left="10.0" right="10.0" top="10.0"/>
+        </padding>
+        <CheckBox fx:id="cbVAC" mnemonicParsing="false" text="VAC important?"/>
+    </HBox>
+    <HBox prefHeight="26.0" prefWidth="454.0" spacing="5.0">
+        <padding>
+            <Insets left="10.0"/>
+        </padding>
+        <Button onAction="#add" alignment="CENTER" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="Add"/>
+    </HBox>
+</VBox>

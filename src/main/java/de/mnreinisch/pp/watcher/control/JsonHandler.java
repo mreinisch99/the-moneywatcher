@@ -46,7 +46,7 @@ public class JsonHandler<T> {
         try (Reader reader = new FileReader(config)) {
             return mapper.readValue(reader, clazz);
         } catch (FileNotFoundException e) {
-            throw new CustomException("Config " + config.getName() + " doesn't exist.", e, true);
+            throw new CustomException("Config " + config.getName() + " doesn't exist.", e);
         } catch (IOException e) {
             throw new TechnicalException("Error while reading config " + config.getName() + "\n" + e.getMessage(), e);
         }
@@ -57,7 +57,7 @@ public class JsonHandler<T> {
             TypeFactory typeFactory = mapper.getTypeFactory();
             return mapper.readValue(reader, typeFactory.constructCollectionType(List.class, clazz));
         } catch (FileNotFoundException e) {
-            throw new CustomException("Config " + config.getName() + " doesn't exist.", e, true);
+            throw new CustomException("Config " + config.getName() + " doesn't exist.", e);
         } catch (IOException e) {
             throw new TechnicalException("Error while reading config " + config.getName() + "\n" + e.getMessage(), e);
         }

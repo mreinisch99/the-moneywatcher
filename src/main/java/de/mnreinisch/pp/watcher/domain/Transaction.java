@@ -1,6 +1,7 @@
 package de.mnreinisch.pp.watcher.domain;
 
 import de.mnreinisch.pp.watcher.control.dto.TransactionDTO;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -8,6 +9,8 @@ import java.util.Objects;
 
 @NamedQueries({
         @NamedQuery(name = Transaction.Q_GET_ALL_IN_RANGE, query = "select t from Transaction t where t.date.date between :" + Transaction.BEGIN_YEAR + " and :" + Transaction.END_YEAR),
+        @NamedQuery(name = Transaction.Q_GET_ALL_TRANSACTIONS, query = "select t from Transaction t "),
+        @NamedQuery(name = Transaction.Q_GET_LAST_ID, query = "select t.id from Transaction t order by t.id desc"),
         @NamedQuery(name = Transaction.Q_GET_TRANSACTION_BY_ID, query = "select t from Transaction t where t.id = :" + Transaction.ID_VAR)
 })
 
@@ -17,12 +20,18 @@ public class Transaction implements Serializable {
     private static final long serialVersionUID = -4281575077333973070L;
 
     public static final String Q_GET_ALL_IN_RANGE = "Q_GET_ALL_IN_RANGE";
+    public static final String Q_GET_ALL_TRANSACTIONS = "Q_GET_ALL_TRANSACTIONS";
     public static final String Q_GET_TRANSACTION_BY_ID = "Q_GET_TRANSACTION_BY_ID";
+    public static final String Q_GET_LAST_ID = "Q_GET_LAST_ID";
     public static final String BEGIN_YEAR = "BEGIN_YEAR";
     public static final String END_YEAR = "END_YEAR";
     public static final String ID_VAR = "ID_VAR";
 
     @Id
+    /*@GeneratedValue(generator = "idGenerator")
+    @GenericGenerator(name = "idGenerator", strategy = "enhanced-sequence", parameters = {
+            @org.hibernate.annotations.Parameter(name = "initial_value", value = "5")
+    })*/
     @GeneratedValue
     @Column(name = "ID")
     private Long id;
@@ -43,9 +52,12 @@ public class Transaction implements Serializable {
     private Date date;
 
 
-    public Transaction(Long id, double amount) {
-        this.id = id;
+    public Transaction(double amount, String info, boolean vac, String imgSrc, Date date) {
         this.amount = amount;
+        this.info = info;
+        this.vac = vac;
+        this.imgSrc = imgSrc;
+        this.date = date;
     }
 
     public Transaction(TransactionDTO dto){
@@ -121,7 +133,8 @@ public class Transaction implements Serializable {
         return Objects.hash(id);
     }
 
+    @Transient
     public TransactionDTO toDTO(){
-        return new TransactionDTO(id, amount, info, vac, imgSrc, date.getDateAsLD());
+        return new TransactionDTO(id, amount, info, vac, imgSrc, date.getDateAsString());
     }
 }

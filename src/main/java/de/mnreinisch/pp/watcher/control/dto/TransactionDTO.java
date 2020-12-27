@@ -1,22 +1,34 @@
 package de.mnreinisch.pp.watcher.control.dto;
 
+import de.mnreinisch.pp.watcher.domain.Date;
 import org.joda.time.LocalDate;
 
-public class TransactionDTO {
+public class TransactionDTO implements Comparable<TransactionDTO> {
     private Long id;
     private double amount;
     private String info;
     private boolean vac;
     private String imgSrc;
-    private LocalDate date;
+    private String date;
+    private LocalDate localDate;
 
-    public TransactionDTO(Long id, double amount, String info, boolean vac, String imgSrc, LocalDate date) {
+    public TransactionDTO(double amount, String info, boolean vac, String imgSrc, String date) {
+        this.amount = amount;
+        this.info = info;
+        this.vac = vac;
+        this.imgSrc = imgSrc;
+        this.date = date;
+        this.localDate = Date.convertStringToLD(date);
+    }
+
+    public TransactionDTO(Long id, double amount, String info, boolean vac, String imgSrc, String date) {
         this.id = id;
         this.amount = amount;
         this.info = info;
         this.vac = vac;
         this.imgSrc = imgSrc;
         this.date = date;
+        this.localDate = Date.convertStringToLD(date);
     }
 
     public Long getId() {
@@ -59,11 +71,29 @@ public class TransactionDTO {
         this.imgSrc = imgSrc;
     }
 
-    public LocalDate getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(String date) {
         this.date = date;
+        this.localDate = Date.convertStringToLD(date);
+    }
+
+    @Override
+    public int compareTo(TransactionDTO o) {
+        return this.localDate.compareTo(o.localDate);
+    }
+
+    @Override
+    public String toString() {
+        return "TransactionDTO{" +
+                "id=" + id +
+                ", amount=" + amount +
+                ", info='" + info + '\'' +
+                ", vac=" + vac +
+                ", imgSrc='" + imgSrc + '\'' +
+                ", date='" + date + '\'' +
+                '}';
     }
 }
