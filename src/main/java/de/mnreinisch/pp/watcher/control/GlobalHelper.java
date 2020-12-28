@@ -2,6 +2,9 @@ package de.mnreinisch.pp.watcher.control;
 
 import javafx.stage.Stage;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class GlobalHelper {
     private Stage startStage;
     private Stage addStage;
@@ -44,5 +47,11 @@ public class GlobalHelper {
             return false;
         }
         return true;
+    }
+
+    public static double round(double number){
+        BigDecimal bigDecimal = BigDecimal.valueOf(number);
+        bigDecimal = bigDecimal.setScale(2, RoundingMode.HALF_UP);
+        return bigDecimal.doubleValue();
     }
 }

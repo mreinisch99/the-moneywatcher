@@ -20,12 +20,17 @@ import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import org.joda.time.LocalDate;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
+
+import static de.mnreinisch.pp.watcher.control.GlobalHelper.round;
 
 public class Start implements Initializable {
     @FXML
@@ -103,7 +108,7 @@ public class Start implements Initializable {
         });
         amount.setOnEditCommit(t -> {
             TransactionDTO transactionDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
-            transactionDTO.setAmount(t.getNewValue());
+            transactionDTO.setAmount(round(t.getNewValue()));
             updateTransaction(transactionDTO);
         });
         info.setOnEditCommit(t -> {
@@ -146,10 +151,10 @@ public class Start implements Initializable {
         List<TransactionDTO> allTransactions = start.transactionControl.getTransactionInMonth(start.currentTime);
         Collections.sort(allTransactions);
         Collections.reverse(allTransactions);
-        double sum = allTransactions
+        double sum = round(allTransactions
                 .stream()
                 .mapToDouble(TransactionDTO::getAmount)
-                .sum();
+                .sum());
 
         start.lblsum.setText("Total: " + sum + "€");
 

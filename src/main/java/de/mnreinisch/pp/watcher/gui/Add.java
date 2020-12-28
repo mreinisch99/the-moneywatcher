@@ -9,8 +9,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import static de.mnreinisch.pp.watcher.control.GlobalHelper.round;
 
 public class Add implements Initializable {
     @FXML
@@ -50,7 +54,7 @@ public class Add implements Initializable {
             return;
         }
 
-        double amount = Double.parseDouble(text);
+        double amount = round(Double.parseDouble(text));
 
         try{
             transactionControl.addTransaction(amount, tfInfo.getText(), cbVAC.isSelected(), null, day);
