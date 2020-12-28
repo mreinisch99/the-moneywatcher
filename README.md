@@ -9,8 +9,8 @@ the-moneywatcher is based on JDK 11 and OpenJFX 11. For database stuff it uses h
 
 # Todo
 
-- [ ] add screens
-- [ ] remove unnecessary code & dependencies
+- [x] add screens
+- [x] remove unnecessary code & dependencies
 - [ ] add img upload
 - [ ] add some tests
 
