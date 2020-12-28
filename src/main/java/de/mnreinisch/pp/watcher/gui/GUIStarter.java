@@ -20,7 +20,7 @@ public class GUIStarter {
             GlobalHelper gh = GlobalHelper.getInstance();
             FXMLLoader fxmlLoader = new FXMLLoader();
 
-            fxmlLoader.setLocation(GUIStarter.class.getResource("./start.fxml"));
+            fxmlLoader.setLocation(GUIStarter.class.getResource("start.fxml"));
 
             Parent load = fxmlLoader.load();
             Stage dashboard = createNewGUI(load, "Dashboard");
@@ -40,7 +40,7 @@ public class GUIStarter {
         try{
             GlobalHelper gh = GlobalHelper.getInstance();
             FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(GUIStarter.class.getResource("./add.fxml"));
+            fxmlLoader.setLocation(GUIStarter.class.getResource("add.fxml"));
             Parent load = fxmlLoader.load();
             Stage add = createNewGUI(load, "Add transaction");
             gh.setAddStage(add);

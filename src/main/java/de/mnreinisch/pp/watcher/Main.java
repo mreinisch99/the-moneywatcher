@@ -41,7 +41,6 @@ public class Main extends Application {
             Alerts.showError("Error on startup", "Error while starting application.\n" + throwable.getMessage() + "\nApplication will be closed!", true, globalHelper.getStartStage());
             TransactionRepository.closeConn();
             Platform.exit();
-//            System.exit(0);
         }
     }
 
@@ -59,7 +58,12 @@ public class Main extends Application {
         File dbFolder = new File(mainConfigFolder, "db");
         if(!dbFolder.exists()){
             dbFolder.mkdir();
-            copy(getClass().getResourceAsStream("./db/transactions.sqlite"),"./config/db/transactions.sqlite");
+        }
+
+
+        File dbF = new File("./config/db/transactions.sqlite");
+        if(!dbF.exists()){
+            copy(getClass().getResourceAsStream("db/transactions.sqlite"), dbF.getAbsolutePath());
         }
     }
 
@@ -75,6 +79,6 @@ public class Main extends Application {
     @Override
     public void stop() throws Exception {
         super.stop();
-        System.exit(0);
+        System.exit(0); // Needed because application runs over Launcher.java -> application won't exit completely after Platform.exit()
     }
 }

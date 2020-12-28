@@ -15,15 +15,12 @@ public class LogInit {
     private static String globalLogFile = ".\\logs\\global\\log_" + LocalDate.now().format(DateTimeFormatter.ISO_DATE) + ".log";
 
 
-    private static File devMode = new File(".\\configs\\devMode");
-    public static File globalConfigPath = new File(".\\configs\\");
+    private static File devMode = new File(".\\config\\devMode");
 
 
     public static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     public static void initializeLogger() throws IOException {
-        if(!globalConfigPath.exists()) globalConfigPath.mkdir();
-
         init(LOGGER, globalLogFolder, globalLogFile, false);
     }
 
