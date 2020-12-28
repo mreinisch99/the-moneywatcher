@@ -18,3 +18,15 @@ the-moneywatcher is based on JDK 11 and OpenJFX 11. For database stuff it uses h
 
 You can run this application over your favorite IDE, just run de.mnreinisch.pp.watcher.Launcher.java
 or if you want a jar can build it with `mvn clean install` or only `mvn package` to trigger maven-shade-plugin and create a single jar-file.
+
+# Impressions
+
+## Dashboard
+
+![Dashboard Image](https://i.imgur.com/TzXuuwv.png)
+![Dashboard Image negative](https://i.imgur.com/Nexcq0S.png)
+
+## Add transaction
+Shortcut from Dashboard: Alt + T + N
+
+![Add Image](https://i.imgur.com/Kxfh8FJ.png)
