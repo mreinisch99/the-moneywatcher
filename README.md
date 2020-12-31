@@ -34,4 +34,5 @@ Shortcut from Dashboard: Alt + T + N
 Shortcut from Dashboard: Alt + C + C
 
 ![Config Image](https://i.imgur.com/S01X0Bh.png)
+<br />
 To edit a configuration just doubleclick on a value
