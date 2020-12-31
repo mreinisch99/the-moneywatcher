@@ -24,7 +24,6 @@ public class GUIStarter {
 
             Parent load = fxmlLoader.load();
             Stage dashboard = createNewGUI(load, "Dashboard");
-            dashboard.setOnCloseRequest(Start::exitApplication);
 
             dashboard.getScene().getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, Start::exitApplication);
 
@@ -32,11 +31,30 @@ public class GUIStarter {
             Start.reloadTable();
 
         } catch (IOException e) {
+            throw new TechnicalException("Couldn't load start-view.\n" +e.getMessage(), e);
+        }
+    }
+
+    public static void generateConfigView() throws TechnicalException {
+        try{
+            GlobalHelper gh = GlobalHelper.getInstance();
+            FXMLLoader fxmlLoader = new FXMLLoader();
+
+            fxmlLoader.setLocation(GUIStarter.class.getResource("config.fxml"));
+
+            Parent load = fxmlLoader.load();
+            Stage config = createNewGUI(load, "Configuration");
+
+            config.getScene().getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, Config::exitApplication);
+
+            gh.setConfigStage(config);
+
+        } catch (IOException e) {
             throw new TechnicalException("Couldn't load start-view.\n" +e.getMessage());
         }
     }
 
-    public static void createAddView() throws TechnicalException {
+    public static void generateAddView() throws TechnicalException {
         try{
             GlobalHelper gh = GlobalHelper.getInstance();
             FXMLLoader fxmlLoader = new FXMLLoader();

@@ -1,5 +1,12 @@
+# Custom stuff
+.idea/
+config/
+logs/
+shade/
+
 # Compiled class file
 *.class
+target/
 
 # Log file
 *.log

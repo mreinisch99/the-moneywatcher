@@ -12,16 +12,8 @@ import java.util.stream.Collectors;
 public class TransactionControl {
     private TransactionRepository transactionRepository = TransactionRepository.getInstance();
 
-    public List<TransactionDTO> getAllTransactions() {
-        List<Transaction> transactions = transactionRepository.getAllTransactions();
-        return transactions
-                .stream()
-                .map(Transaction::toDTO)
-                .collect(Collectors.toList());
-    }
-
-    public List<TransactionDTO> getTransactionInMonth(LocalDate localDate){
-        List<Transaction> transactions = transactionRepository.getTransactionsInMonth(localDate);
+    public List<TransactionDTO> getTransactionInRange(LocalDate startTime, LocalDate endTime){
+        List<Transaction> transactions = transactionRepository.getTransactionsInRange(startTime, endTime);
         return transactions
                 .stream()
                 .map(Transaction::toDTO)
@@ -40,13 +32,6 @@ public class TransactionControl {
         transactionRepository.deleteTransaction(byId);
     }
 
-    public List<TransactionDTO> getAllTransactionsByYear(int year) {
-        List<Transaction> transactions = transactionRepository.getTransactionsInYear(year);
-        return transactions
-                .stream()
-                .map(Transaction::toDTO)
-                .collect(Collectors.toList());
-    }
 
     public void updateEntity(TransactionDTO transactionDTO) throws CustomException {
         if(transactionDTO.getId() == null) throw new CustomException("ID from given transaction object is null!");

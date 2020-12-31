@@ -1,11 +1,8 @@
 package de.mnreinisch.pp.watcher.gui;
 
-import de.mnreinisch.pp.watcher.control.Alerts;
-import de.mnreinisch.pp.watcher.control.GlobalHelper;
-import de.mnreinisch.pp.watcher.control.LogInit;
-import de.mnreinisch.pp.watcher.control.TransactionControl;
+import de.mnreinisch.pp.watcher.control.*;
 import de.mnreinisch.pp.watcher.control.dto.TransactionDTO;
-import de.mnreinisch.pp.watcher.domain.TransactionRepository;
+import de.mnreinisch.pp.watcher.domain.EMFactory;
 import de.mnreinisch.pp.watcher.domain.exceptions.CustomException;
 import de.mnreinisch.pp.watcher.domain.exceptions.TechnicalException;
 import javafx.application.Platform;
@@ -20,15 +17,11 @@ import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import org.joda.time.LocalDate;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 import static de.mnreinisch.pp.watcher.control.GlobalHelper.round;
 
@@ -58,20 +51,71 @@ public class Start implements Initializable {
 
     private GlobalHelper globalHelper = GlobalHelper.getInstance();
     private TransactionControl transactionControl;
+    private ConfigurationControl configurationControl;
     private LocalDate currentTime = new LocalDate();
+    private LocalDate endTime = new LocalDate();
+    private int startOfMonth = 1;
     private static Start start;
+
+    public static <T extends Event> void exitApplication(T t) {
+        EMFactory.closeConnection();
+        Platform.exit();
+    }
+
+    public static void reloadTable() {
+
+        start.lbldate.setText(start.currentTime.toString("dd.MM.yyyy") + " - " + start.endTime.toString("dd.MM.yyyy"));
+
+        List<TransactionDTO> allTransactions = start.transactionControl.getTransactionInRange(start.currentTime, start.endTime);
+        Collections.sort(allTransactions);
+        Collections.reverse(allTransactions);
+        double sum = round(allTransactions
+                .stream()
+                .mapToDouble(TransactionDTO::getAmount)
+                .sum());
+
+        start.lblsum.setText("Total: " + sum + "€");
+
+        if(sum < 0.0){
+            start.lblsum.setTextFill(Color.rgb(255,0,0));
+        } else if(sum == 0.0) {
+            start.lblsum.setTextFill(Color.rgb(255,255,255));
+        } else {
+            start.lblsum.setTextFill(Color.rgb(48,170,0));
+        }
+
+        start.tvtran.setItems(FXCollections.observableList(allTransactions));
+    }
+
+    public static void reloadConfiguration(){
+        try {
+            start.startOfMonth = start.configurationControl.getStartDay();
+            Calendar c = Calendar.getInstance();
+            c.set(Calendar.YEAR, start.currentTime.getYear());
+            c.set(Calendar.MONTH, start.currentTime.getMonthOfYear() - 1);
+            c.set(Calendar.DAY_OF_MONTH, start.startOfMonth);
+            start.setTimes(c);
+            reloadTable();
+        } catch (TechnicalException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         transactionControl = new TransactionControl();
-        addEventListener();
+        configurationControl = new ConfigurationControl();
         start = this;
+
+        reloadConfiguration();
+        addEventListener();
     }
 
     private void addEventListener() {
         setTableProps();
         tvtran.setEditable(true);
         close.setOnAction(Start::exitApplication);
+
     }
 
     private void setTableProps() {
@@ -89,10 +133,10 @@ public class Start implements Initializable {
         info.setSortable(false);
 //        image.setSortable(false);
 
-        Callback<TableColumn<TransactionDTO, Double>, TableCell<TransactionDTO, Double>> cellFactoryDouble = (TableColumn<TransactionDTO, Double> param) -> new EditCellDouble();
+        Callback<TableColumn<TransactionDTO, Double>, TableCell<TransactionDTO, Double>> cellFactoryDouble = (TableColumn<TransactionDTO, Double> param) -> new EditCellDouble<>();
         amount.setCellFactory(cellFactoryDouble);
 
-        Callback<TableColumn<TransactionDTO, String>, TableCell<TransactionDTO, String>> cellFactoryString = (TableColumn<TransactionDTO, String> param) -> new EditCellString();
+        Callback<TableColumn<TransactionDTO, String>, TableCell<TransactionDTO, String>> cellFactoryString = (TableColumn<TransactionDTO, String> param) -> new EditCellString<>();
         day.setCellFactory(cellFactoryString);
         info.setCellFactory(cellFactoryString);
 
@@ -145,41 +189,23 @@ public class Start implements Initializable {
         }
     }
 
-    public static void reloadTable() {
-        start.lbldate.setText(start.currentTime.toString("MM.yyyy"));
-
-        List<TransactionDTO> allTransactions = start.transactionControl.getTransactionInMonth(start.currentTime);
-        Collections.sort(allTransactions);
-        Collections.reverse(allTransactions);
-        double sum = round(allTransactions
-                .stream()
-                .mapToDouble(TransactionDTO::getAmount)
-                .sum());
-
-        start.lblsum.setText("Total: " + sum + "€");
-
-        if(sum < 0.0){
-            start.lblsum.setTextFill(Color.rgb(255,0,0));
-        } else if(sum == 0.0) {
-            start.lblsum.setTextFill(Color.rgb(255,255,255));
-        } else {
-            start.lblsum.setTextFill(Color.rgb(48,170,0));
-        }
-
-        start.tvtran.setItems(FXCollections.observableList(allTransactions));
-    }
 
     @FXML
     private void createAddDialog() {
         try {
-            GUIStarter.createAddView();
+            GUIStarter.generateAddView();
         } catch (TechnicalException e) {
             Alerts.showError("Error while create view", "An error occurred while creating add view.\n" + e.getMessage(), true, globalHelper.getStartStage());
         }
     }
 
-    private void createEditDialog(TransactionDTO transactionDTO) {
-
+    @FXML
+    private void createEditConfigDialog() {
+        try {
+            GUIStarter.generateConfigView();
+        } catch (TechnicalException e) {
+            Alerts.showError("Error while create view", "An error occurred while creating config view.\n" + e.getMessage(), true, globalHelper.getStartStage());
+        }
     }
 
     @FXML
@@ -187,10 +213,18 @@ public class Start implements Initializable {
         Calendar c = Calendar.getInstance();
         c.set(Calendar.YEAR, currentTime.getYear());
         c.set(Calendar.MONTH, currentTime.getMonthOfYear() - 1);
-        c.set(Calendar.DAY_OF_MONTH, 1);
+        c.set(Calendar.DAY_OF_MONTH, startOfMonth);
         c.add(Calendar.MONTH, 1);
-        currentTime = new LocalDate(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1, 1);
+        setTimes(c);
         reloadTable();
+    }
+
+    private void setTimes(Calendar c) {
+        currentTime = new LocalDate(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH));
+
+        c.add(Calendar.MONTH, 1);
+        c.add(Calendar.DAY_OF_MONTH, -1);
+        endTime = new LocalDate(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH));
     }
 
     @FXML
@@ -198,9 +232,9 @@ public class Start implements Initializable {
         Calendar c = Calendar.getInstance();
         c.set(Calendar.YEAR, currentTime.getYear());
         c.set(Calendar.MONTH, currentTime.getMonthOfYear() - 1);
-        c.set(Calendar.DAY_OF_MONTH, 1);
+        c.set(Calendar.DAY_OF_MONTH, startOfMonth);
         c.add(Calendar.MONTH, -1);
-        currentTime = new LocalDate(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1, 1);
+        setTimes(c);
         reloadTable();
     }
 
@@ -211,10 +245,5 @@ public class Start implements Initializable {
         } catch (CustomException e) {
             Alerts.showWarning("Error while deleting", "An error occurred while deleting selected transaction.\n" + e.getMessage(), false, globalHelper.getStartStage());
         }
-    }
-
-    public static <T extends Event> void exitApplication(T t) {
-        TransactionRepository.closeConn();
-        Platform.exit();
     }
 }

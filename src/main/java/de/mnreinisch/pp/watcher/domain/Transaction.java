@@ -1,7 +1,6 @@
 package de.mnreinisch.pp.watcher.domain;
 
 import de.mnreinisch.pp.watcher.control.dto.TransactionDTO;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -28,10 +27,6 @@ public class Transaction implements Serializable {
     public static final String ID_VAR = "ID_VAR";
 
     @Id
-    /*@GeneratedValue(generator = "idGenerator")
-    @GenericGenerator(name = "idGenerator", strategy = "enhanced-sequence", parameters = {
-            @org.hibernate.annotations.Parameter(name = "initial_value", value = "5")
-    })*/
     @GeneratedValue
     @Column(name = "ID")
     private Long id;
@@ -68,6 +63,7 @@ public class Transaction implements Serializable {
         this.imgSrc = dto.getImgSrc();
         this.date = new Date(dto.getDate());
     }
+
 
     public Transaction() {
     }

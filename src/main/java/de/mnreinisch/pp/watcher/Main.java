@@ -3,14 +3,15 @@ package de.mnreinisch.pp.watcher;
 import de.mnreinisch.pp.watcher.control.Alerts;
 import de.mnreinisch.pp.watcher.control.GlobalHelper;
 import de.mnreinisch.pp.watcher.control.LogInit;
-import de.mnreinisch.pp.watcher.domain.TransactionRepository;
-import de.mnreinisch.pp.watcher.domain.exceptions.TechnicalException;
+import de.mnreinisch.pp.watcher.domain.EMFactory;
 import de.mnreinisch.pp.watcher.gui.GUIStarter;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -39,7 +40,7 @@ public class Main extends Application {
         } catch(Throwable throwable){
             LOGGER.log(Level.SEVERE, "Error while starting application.\n" + throwable.getMessage(), throwable);
             Alerts.showError("Error on startup", "Error while starting application.\n" + throwable.getMessage() + "\nApplication will be closed!", true, globalHelper.getStartStage());
-            TransactionRepository.closeConn();
+            EMFactory.closeConnection();
             Platform.exit();
         }
     }

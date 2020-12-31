@@ -1,11 +1,10 @@
 package de.mnreinisch.pp.watcher.gui;
 
-import de.mnreinisch.pp.watcher.control.dto.TransactionDTO;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TextField;
 
-public class EditCellDouble extends TableCell<TransactionDTO, Double> {
+public class EditCellDouble<T> extends TableCell<T, Double> {
     private TextField textField;
 
     public EditCellDouble() {

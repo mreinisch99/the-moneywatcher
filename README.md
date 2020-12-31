@@ -1,6 +1,7 @@
 # the-moneywatcher
 
-This program is a little application to track your transactions in different months f.e. between your salary.
+This program is a little application to track your transactions in different months f.e. between your salary.<br />
+You can also change the start day of month value in configurations tab f.e. you get your salary on day 15. each month.<br /><br />
 Your data will be saved in a sqlite-database in `config/db/transactions.sqlite`
 
 # Informations
@@ -9,8 +10,6 @@ the-moneywatcher is based on JDK 11 and OpenJFX 11. For database stuff it uses h
 
 # Todo
 
-- [x] add screens
-- [x] remove unnecessary code & dependencies
 - [ ] add img upload
 - [ ] add some tests
 
@@ -23,10 +22,16 @@ or if you want a jar can build it with `mvn clean install` or only `mvn package`
 
 ## Dashboard
 
-![Dashboard Image](https://i.imgur.com/TzXuuwv.png)
-![Dashboard Image negative](https://i.imgur.com/Nexcq0S.png)
+![Dashboard Image](https://i.imgur.com/AAq13y3.png)
+![Dashboard Image negative](https://i.imgur.com/frqNSJd.png)
 
 ## Add transaction
 Shortcut from Dashboard: Alt + T + N
 
 ![Add Image](https://i.imgur.com/Kxfh8FJ.png)
+
+## Configuration
+Shortcut from Dashboard: Alt + C + C
+
+![Config Image](https://i.imgur.com/S01X0Bh.png)
+To edit a configuration just doubleclick on a value

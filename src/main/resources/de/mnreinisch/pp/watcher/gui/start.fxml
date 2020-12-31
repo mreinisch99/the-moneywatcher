@@ -19,7 +19,10 @@
             <MenuItem fx:id="close" text="_Close"/>
         </Menu>
         <Menu text="_Transactions">
-            <MenuItem onAction="#createAddDialog" text="_New"/>
+            <MenuItem onAction="#createAddDialog" text="_New Transactions"/>
+        </Menu>
+        <Menu text="_Configuration">
+            <MenuItem onAction="#createEditConfigDialog" text="_Configuration"/>
         </Menu>
     </MenuBar>
     <HBox alignment="CENTER" prefHeight="33.0" prefWidth="700.0" spacing="5.0">

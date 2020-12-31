@@ -8,6 +8,7 @@ import java.math.RoundingMode;
 public class GlobalHelper {
     private Stage startStage;
     private Stage addStage;
+    private Stage configStage;
 
     private static GlobalHelper globalHelper;
 
@@ -35,6 +36,14 @@ public class GlobalHelper {
 
     public void setAddStage(Stage addStage) {
         this.addStage = addStage;
+    }
+
+    public Stage getConfigStage() {
+        return configStage;
+    }
+
+    public void setConfigStage(Stage configStage) {
+        this.configStage = configStage;
     }
 
     public static boolean isNumeric(String strNum) {
