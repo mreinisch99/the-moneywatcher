@@ -57,6 +57,16 @@ public class Start implements Initializable {
     private int startOfMonth = 1;
     private static Start start;
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        transactionControl = new TransactionControl();
+        configurationControl = new ConfigurationControl();
+        start = this;
+
+        reloadConfiguration();
+        addEventListener();
+    }
+
     public static <T extends Event> void exitApplication(T t) {
         EMFactory.closeConnection();
         Platform.exit();
@@ -90,25 +100,21 @@ public class Start implements Initializable {
     public static void reloadConfiguration(){
         try {
             start.startOfMonth = start.configurationControl.getStartDay();
+
             Calendar c = Calendar.getInstance();
             c.set(Calendar.YEAR, start.currentTime.getYear());
             c.set(Calendar.MONTH, start.currentTime.getMonthOfYear() - 1);
             c.set(Calendar.DAY_OF_MONTH, start.startOfMonth);
+            if(start.currentTime.getDayOfMonth() < start.startOfMonth){
+                c.add(Calendar.MONTH, -1);
+            }
+
+
             start.setTimes(c);
             reloadTable();
         } catch (TechnicalException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        transactionControl = new TransactionControl();
-        configurationControl = new ConfigurationControl();
-        start = this;
-
-        reloadConfiguration();
-        addEventListener();
     }
 
     private void addEventListener() {
